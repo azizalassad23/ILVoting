@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pemilihan Kelas Integrated Learning</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0d0e15;
+            --neon-pink: #ff007a;
+            --neon-cyan: #00f0ff;
+            --neon-lime: #39ff14;
+            --neon-yellow: #fff01f;
+            --box-bg: rgba(20, 20, 30, 0.85);
+        }
+
+        /* Latar belakang grid yang bergerak perlahan */
+        @keyframes moveGrid {
+            0% { background-position: 0 0, 0 0; }
+            100% { background-position: 50px 50px, 50px 50px; }
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                linear-gradient(0deg, transparent 24%, rgba(0, 240, 255, 0.15) 25%, rgba(0, 240, 255, 0.15) 26%, transparent 27%, transparent 74%, rgba(0, 240, 255, 0.15) 75%, rgba(0, 240, 255, 0.15) 76%, transparent 77%, transparent), 
+                linear-gradient(90deg, transparent 24%, rgba(0, 240, 255, 0.15) 25%, rgba(0, 240, 255, 0.15) 26%, transparent 27%, transparent 74%, rgba(0, 240, 255, 0.15) 75%, rgba(0, 240, 255, 0.15) 76%, transparent 77%, transparent);
+            background-size: 50px 50px;
+            animation: moveGrid 4s linear infinite;
+            color: white;
+            font-family: 'Press Start 2P', cursive;
+            text-align: center;
+            padding: 20px 10px;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            color: var(--neon-yellow);
+            text-shadow: 3px 3px var(--neon-pink);
+            font-size: 26px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            padding: 0 10px;
+        }
+
+        .input-section {
+            margin-bottom: 35px;
+            padding: 0 15px;
+        }
+
+        input[type="text"] {
+            font-family: 'Press Start 2P', cursive;
+            padding: 18px;
+            font-size: 14px;
+            background: rgba(13, 14, 21, 0.9);
+            border: 3px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            width: 100%;
+            max-width: 450px;
+            box-sizing: border-box;
+            border-radius: 12px;
+            outline: none;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            box-shadow: 0 0 25px var(--neon-cyan);
+            transform: scale(1.02);
+            background: var(--bg-color);
+        }
+
+        input[type="text"]::placeholder {
+            color: rgba(0, 240, 255, 0.4);
+            font-size: 11px;
+        }
+
+        #status-msg {
+            margin-top: 15px;
+            font-size: 12px;
+            line-height: 1.5;
+            min-height: 20px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+        }
+
+        .grid-container {
+            display: grid;
+            /* Responsif: otomatis mengisi ruang, minimal 280px */
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 10px;
+        }
+
+        /* Animasi mengambang untuk card agar tidak kaku */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .class-card {
+            background: var(--box-bg);
+            border: 3px solid var(--neon-pink);
+            padding: 25px 20px;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(255, 0, 122, 0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            backdrop-filter: blur(5px);
+            animation: float 4s ease-in-out infinite;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        /* Variasi delay animasi agar tidak bergerak bersamaan */
+        .class-card:nth-child(even) { animation-delay: 1s; }
+        .class-card:nth-child(3n) { animation-delay: 2s; }
+
+        .class-card:hover {
+            transform: translateY(-10px) scale(1.03) !important; /* Timpa animasi float saat dihover */
+            box-shadow: 0 12px 30px var(--neon-pink);
+            z-index: 10;
+        }
+
+        .class-card h2 {
+            color: var(--neon-lime);
+            font-size: 15px;
+            margin-top: 0;
+            line-height: 1.5;
+            text-shadow: 2px 2px rgba(0,0,0,0.8);
+        }
+
+        .capacity {
+            font-size: 13px;
+            margin: 20px 0;
+            color: white;
+            letter-spacing: 1px;
+        }
+
+        .btn-pilih {
+            background-color: var(--neon-cyan);
+            color: var(--bg-color);
+            border: none;
+            padding: 15px 10px;
+            border-radius: 8px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 11px;
+            cursor: pointer;
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.6);
+            transition: all 0.2s ease;
+            width: 100%;
+            margin-top: auto;
+        }
+
+        .btn-pilih:active {
+            transform: scale(0.95);
+        }
+
+        .btn-pilih:disabled {
+            background-color: #2a2a35;
+            color: #555;
+            border: 2px dashed #444;
+            box-shadow: none;
+            cursor: not-allowed;
+            opacity: 0.8;
+            transform: none;
+        }
+
+        /* Variasi Warna Tema Cheerful per Card */
+        .class-card:nth-child(3n+1) { border-color: var(--neon-cyan); box-shadow: 0 8px 20px rgba(0, 240, 255, 0.3); }
+        .class-card:nth-child(3n+2) { border-color: var(--neon-lime); box-shadow: 0 8px 20px rgba(57, 255, 20, 0.3); }
+        
+        .class-card:nth-child(3n+1):hover { box-shadow: 0 12px 30px var(--neon-cyan); }
+        .class-card:nth-child(3n+2):hover { box-shadow: 0 12px 30px var(--neon-lime); }
+
+        .class-card:nth-child(3n+1) .btn-pilih { background-color: var(--neon-pink); color: white; box-shadow: 0 0 12px rgba(255, 0, 122, 0.6); }
+        .class-card:nth-child(3n+2) .btn-pilih { background-color: var(--neon-yellow); color: black; box-shadow: 0 0 12px rgba(255, 240, 31, 0.6); }
+
+        /* --- MEDIA QUERIES UNTUK TAMPILAN HP (MOBILE RESPONSIVE) --- */
+        @media (max-width: 600px) {
+            body {
+                padding: 15px 10px;
+                background-size: 30px 30px; /* Grid lebih kecil di HP */
+            }
+            h1 {
+                font-size: 18px; /* Judul lebih kecil */
+                margin-bottom: 20px;
+            }
+            input[type="text"] {
+                font-size: 11px;
+                padding: 15px;
+            }
+            .grid-container {
+                grid-template-columns: 1fr; /* Memaksa jadi 1 kolom ke bawah di HP */
+                gap: 20px;
+            }
+            .class-card {
+                padding: 20px 15px;
+                animation: none; /* Matikan animasi float di HP agar scrolling lebih lancar */
+            }
+            .class-card:hover {
+                transform: scale(1.02) !important; /* Hover effect diperkecil untuk touch screen */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>INTEGRATED LEARNING <br> SELECTION</h1>
+
+    <div class="input-section">
+        <input type="text" id="inputNama" placeholder="MASUKKAN NAMA KAMU" required autocomplete="off">
+        <div id="status-msg"></div>
+    </div>
+
+    <div class="grid-container" id="kelas-container">
+        </div>
+
+    <script>
+        // PENTING: GANTI URL DI BAWAH INI DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxP0VstfpuvYrDBesIH3fZ0v9ejqHDafVcKi-UOMa2IQaEzpBK1s8r-pgbiziQkw7PwWw/exec'; 
+        const MAX_STUDENTS = 25;
+
+        const classes = [
+            'Cooking class', 
+            'Fotografi', 
+            'Macrame', 
+            'Affiliate', 
+            'Jurnalis', 
+            'Public speaking / English', 
+            'Science class', 
+            'Music class'
+        ];
+
+        const container = document.getElementById('kelas-container');
+        const statusMsg = document.getElementById('status-msg');
+
+        function makeSafeId(str) {
+            return str.replace(/[^a-zA-Z0-9]/g, '');
+        }
+
+        function renderCards() {
+            container.innerHTML = '';
+            classes.forEach(cls => {
+                const safeId = makeSafeId(cls);
+                const card = document.createElement('div');
+                card.className = 'class-card';
+                card.innerHTML = `
+                    <h2>${cls}</h2>
+                    <div class="capacity" id="cap-${safeId}">[ MEMUAT... ]</div>
+                    <button class="btn-pilih" id="btn-${safeId}" onclick="pilihKelas('${cls}')">PILIH KELAS</button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        async function loadData() {
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+                
+                classes.forEach(cls => {
+                    const safeId = makeSafeId(cls);
+                    const capElement = document.getElementById(`cap-${safeId}`);
+                    const btnElement = document.getElementById(`btn-${safeId}`);
+                    
+                    const currentCount = data[cls] || 0;
+                    capElement.innerText = `[ ${currentCount} / ${MAX_STUDENTS} ]`;
+
+                    if (currentCount >= MAX_STUDENTS) {
+                        btnElement.disabled = true;
+                        btnElement.innerText = 'KELAS PENUH';
+                    }
+                });
+            } catch (error) {
+                statusMsg.style.color = 'var(--neon-pink)';
+                statusMsg.innerText = 'Gagal memuat data. Silakan refresh halaman.';
+            }
+        }
+
+        async function pilihKelas(kelasPilihan) {
+            const inputElement = document.getElementById('inputNama');
+            const namaSiswa = inputElement.value.trim();
+            
+            if (!namaSiswa) {
+                statusMsg.style.color = 'var(--neon-yellow)';
+                statusMsg.innerText = 'TULIS NAMA KAMU DULU!';
+                inputElement.focus();
+                return;
+            }
+
+            const allBtns = document.querySelectorAll('.btn-pilih');
+            allBtns.forEach(b => b.disabled = true);
+            
+            statusMsg.style.color = 'var(--neon-cyan)';
+            statusMsg.innerText = 'MEMPROSES DATA... MOHON TUNGGU';
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ name: namaSiswa, selectedClass: kelasPilihan })
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    statusMsg.style.color = 'var(--neon-lime)';
+                    statusMsg.innerText = result.message;
+                    inputElement.value = ''; 
+                } else {
+                    statusMsg.style.color = 'var(--neon-pink)';
+                    statusMsg.innerText = result.message;
+                }
+            } catch (error) {
+                statusMsg.style.color = 'var(--neon-pink)';
+                statusMsg.innerText = 'ERROR JARINGAN. COBA LAGI.';
+            }
+
+            await loadData();
+            allBtns.forEach(b => {
+                if (b.innerText !== 'KELAS PENUH') b.disabled = false;
+            });
+        }
+
+        renderCards();
+        loadData();
+    </script>
+</body>
+</html>

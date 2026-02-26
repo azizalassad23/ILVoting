@@ -15,7 +15,6 @@
             --box-bg: rgba(20, 20, 30, 0.85);
         }
 
-        /* Latar belakang grid yang bergerak perlahan */
         @keyframes moveGrid {
             0% { background-position: 0 0, 0 0; }
             100% { background-position: 50px 50px, 50px 50px; }
@@ -48,6 +47,10 @@
         .input-section {
             margin-bottom: 35px;
             padding: 0 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px; /* Jarak antar kolom input */
         }
 
         input[type="text"] {
@@ -78,7 +81,7 @@
         }
 
         #status-msg {
-            margin-top: 15px;
+            margin-top: 5px;
             font-size: 12px;
             line-height: 1.5;
             min-height: 20px;
@@ -87,7 +90,6 @@
 
         .grid-container {
             display: grid;
-            /* Responsif: otomatis mengisi ruang, minimal 280px */
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 25px;
             max-width: 1100px;
@@ -95,7 +97,6 @@
             padding: 0 10px;
         }
 
-        /* Animasi mengambang untuk card agar tidak kaku */
         @keyframes float {
             0% { transform: translateY(0px); }
             50% { transform: translateY(-8px); }
@@ -116,12 +117,11 @@
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
-        /* Variasi delay animasi agar tidak bergerak bersamaan */
         .class-card:nth-child(even) { animation-delay: 1s; }
         .class-card:nth-child(3n) { animation-delay: 2s; }
 
         .class-card:hover {
-            transform: translateY(-10px) scale(1.03) !important; /* Timpa animasi float saat dihover */
+            transform: translateY(-10px) scale(1.03) !important;
             box-shadow: 0 12px 30px var(--neon-pink);
             z-index: 10;
         }
@@ -170,7 +170,6 @@
             transform: none;
         }
 
-        /* Variasi Warna Tema Cheerful per Card */
         .class-card:nth-child(3n+1) { border-color: var(--neon-cyan); box-shadow: 0 8px 20px rgba(0, 240, 255, 0.3); }
         .class-card:nth-child(3n+2) { border-color: var(--neon-lime); box-shadow: 0 8px 20px rgba(57, 255, 20, 0.3); }
         
@@ -180,31 +179,13 @@
         .class-card:nth-child(3n+1) .btn-pilih { background-color: var(--neon-pink); color: white; box-shadow: 0 0 12px rgba(255, 0, 122, 0.6); }
         .class-card:nth-child(3n+2) .btn-pilih { background-color: var(--neon-yellow); color: black; box-shadow: 0 0 12px rgba(255, 240, 31, 0.6); }
 
-        /* --- MEDIA QUERIES UNTUK TAMPILAN HP (MOBILE RESPONSIVE) --- */
         @media (max-width: 600px) {
-            body {
-                padding: 15px 10px;
-                background-size: 30px 30px; /* Grid lebih kecil di HP */
-            }
-            h1 {
-                font-size: 18px; /* Judul lebih kecil */
-                margin-bottom: 20px;
-            }
-            input[type="text"] {
-                font-size: 11px;
-                padding: 15px;
-            }
-            .grid-container {
-                grid-template-columns: 1fr; /* Memaksa jadi 1 kolom ke bawah di HP */
-                gap: 20px;
-            }
-            .class-card {
-                padding: 20px 15px;
-                animation: none; /* Matikan animasi float di HP agar scrolling lebih lancar */
-            }
-            .class-card:hover {
-                transform: scale(1.02) !important; /* Hover effect diperkecil untuk touch screen */
-            }
+            body { padding: 15px 10px; background-size: 30px 30px; }
+            h1 { font-size: 18px; margin-bottom: 20px; }
+            input[type="text"] { font-size: 11px; padding: 15px; }
+            .grid-container { grid-template-columns: 1fr; gap: 20px; }
+            .class-card { padding: 20px 15px; animation: none; }
+            .class-card:hover { transform: scale(1.02) !important; }
         }
     </style>
 </head>
@@ -214,6 +195,9 @@
 
     <div class="input-section">
         <input type="text" id="inputNama" placeholder="MASUKKAN NAMA KAMU" required autocomplete="off">
+        
+        <input type="text" id="inputKelasAsal" placeholder="KELAS ASAL (CTH: XA / XIC)" required autocomplete="off">
+        
         <div id="status-msg"></div>
     </div>
 
@@ -283,13 +267,23 @@
         }
 
         async function pilihKelas(kelasPilihan) {
-            const inputElement = document.getElementById('inputNama');
-            const namaSiswa = inputElement.value.trim();
+            const inputNama = document.getElementById('inputNama');
+            const inputKelasAsal = document.getElementById('inputKelasAsal');
+            
+            const namaSiswa = inputNama.value.trim();
+            const kelasAsal = inputKelasAsal.value.trim();
             
             if (!namaSiswa) {
                 statusMsg.style.color = 'var(--neon-yellow)';
                 statusMsg.innerText = 'TULIS NAMA KAMU DULU!';
-                inputElement.focus();
+                inputNama.focus();
+                return;
+            }
+
+            if (!kelasAsal) {
+                statusMsg.style.color = 'var(--neon-yellow)';
+                statusMsg.innerText = 'TULIS KELAS ASAL KAMU DULU!';
+                inputKelasAsal.focus();
                 return;
             }
 
@@ -303,7 +297,8 @@
                 const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({ name: namaSiswa, selectedClass: kelasPilihan })
+                    // Mengirimkan nama, kelas asal, dan kelas pilihan ke backend
+                    body: JSON.stringify({ name: namaSiswa, originClass: kelasAsal, selectedClass: kelasPilihan })
                 });
 
                 const result = await response.json();
@@ -311,7 +306,8 @@
                 if (result.status === 'success') {
                     statusMsg.style.color = 'var(--neon-lime)';
                     statusMsg.innerText = result.message;
-                    inputElement.value = ''; 
+                    inputNama.value = ''; 
+                    inputKelasAsal.value = '';
                 } else {
                     statusMsg.style.color = 'var(--neon-pink)';
                     statusMsg.innerText = result.message;
